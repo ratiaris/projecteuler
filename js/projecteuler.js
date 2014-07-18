@@ -104,11 +104,23 @@ var setAnswer = function (elementId, value) {
 
 var setCallback = function (operation) {
     var label = operation.name;
-    document.getElementById(label).onclick = function () {
-        setAnswer(label + "Answer", operation(getInputValue(label + "Input")));
+    var inputLabel = label + "Input";
+    var callback = function () {
+        setAnswer(label + "Answer", operation(getInputValue(inputLabel)));
         return false;
     };
-}
+    document.getElementById(label).onclick = callback;
+    document.getElementsByName(inputLabel)[0].onkeydown = function(event) {
+        event = event || window.event;
+        var keyCode = event.which || event.keyCode;
+        console.log(keyCode);
+        if (keyCode == 13) {
+            callback();
+            return false;
+        }
+        return true;
+    };
+};
 
 setCallback(multiples);
 setCallback(fibonacci);
